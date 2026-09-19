@@ -543,6 +543,8 @@ h1, h2, h3, h4 {
 @media (min-width: 1040px) { .group-grid { grid-template-columns: repeat(4, 1fr); } }
 
 .group {
+  display: flex;
+  flex-direction: column;
   padding: clamp(20px, 2.6vw, 28px);
   background: var(--surface);
   border: 1px solid var(--line);
@@ -561,7 +563,9 @@ h1, h2, h3, h4 {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 16px;
+  /* Mô tả dài ngắn khác nhau -> đẩy khối mã xuống đáy để 4 thẻ thẳng hàng */
+  margin-top: auto;
+  padding-top: 16px;
 }
 .group__codes li {
   padding: 4px 10px;
