@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Baans — Bạn là một thế giới. Hãy bắt đầu khám phá.</title>
+<meta name="description" content="Công cụ tự khám phá tính cách theo bốn trục. Hai bài trắc nghiệm miễn phí, không cần tài khoản, trả kết quả ngay sau khi làm xong.">
+<meta name="theme-color" content="#fbfaf6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121a17" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Baans — Bạn là một thế giới. Hãy bắt đầu khám phá.">
+<meta property="og:description" content="Hai cách khám phá tính cách. Miễn phí, không cần tài khoản, có kết quả ngay.">
+<meta property="og:locale" content="vi_VN">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✳</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+
+<script>
+  // Đặt giao diện trước khi vẽ để không bị nháy màu (FOUC)
+  try {
+    var t = localStorage.getItem('baans-theme');
+    if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+</head>
+<body>
+
+<a class="sr-only" href="#main">Bỏ qua điều hướng, tới nội dung chính</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="wrap">
+    <nav class="nav" aria-label="Điều hướng chính">
+      <a class="brand" href="index.html">baans<span>✳</span></a>
+
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+        <span class="nav__bars" aria-hidden="true"></span>
+        <span class="sr-only">Mở menu</span>
+      </button>
+
+      <div class="nav__menu" id="navMenu">
+        <a class="nav__link" href="#chon-bai-test">Bài trắc nghiệm</a>
+        <a class="nav__link" href="#nhom-tinh-cach">16 nhóm tính cách</a>
+        <a class="nav__link" href="#cau-hoi">Câu hỏi thường gặp</a>
+        <a class="btn btn--primary" href="#chon-bai-test">Khám phá bản thân ↗</a>
+      </div>
+
+      <button class="theme-toggle" id="themeToggle" title="Đổi giao diện sáng/tối">
+        <span aria-hidden="true" id="themeIcon">◐</span>
+        <span class="sr-only">Đổi giao diện sáng/tối</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero__grid">
+        <div>
+          <p class="eyebrow">Baans · Hành trình hiểu mình</p>
+          <h1 class="h1 hero__title">Bạn là một thế giới.<br>Hãy bắt đầu <em>khám phá</em>.</h1>
+          <p class="lead">
+            Hiểu cách bạn nạp năng lượng, nhìn nhận thế giới và đưa ra lựa chọn.
+            Không để đóng khung bản thân — mà để mở thêm những khả năng.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="lam-bai.html?bai=7-muc">Làm bài 7 mức →</a>
+            <a class="btn btn--ghost" href="#chon-bai-test">Xem cả hai bài</a>
+          </div>
+          <p class="hero__note">
+            <span>Miễn phí</span><span aria-hidden="true">·</span>
+            <span>Không cần tài khoản</span><span aria-hidden="true">·</span>
+            <span>Không có đáp án đúng hay sai</span>
+          </p>
+        </div>
+
+        <!-- Thẻ minh hoạ: 4 trục, tự chạy khi vào khung nhìn -->
+        <div class="axis-card" id="heroCard" aria-hidden="true">
+          <div class="axis-card__head">
+            <div>
+              <p class="eyebrow">Kết quả trông như thế này</p>
+              <p class="axis-card__code">INFJ</p>
+            </div>
+            <span class="pill pill--plum">4 trục</span>
+          </div>
+
+          <div class="axis-row">
+            <div class="axis-row__labels"><span><b>Hướng ngoại</b></span><span><b>Hướng nội</b> 68%</span></div>
+            <div class="axis-track"><div class="axis-track__fill" data-w="68"></div></div>
+          </div>
+          <div class="axis-row">
+            <div class="axis-row__labels"><span><b>Giác quan</b></span><span><b>Trực giác</b> 74%</span></div>
+            <div class="axis-track"><div class="axis-track__fill" data-w="74"></div></div>
+          </div>
+          <div class="axis-row">
+            <div class="axis-row__labels"><span><b>Lý trí</b></span><span><b>Cảm xúc</b> 61%</span></div>
+            <div class="axis-track"><div class="axis-track__fill" data-w="61"></div></div>
+          </div>
+          <div class="axis-row">
+            <div class="axis-row__labels"><span><b>Nguyên tắc</b> 57%</span><span><b>Linh hoạt</b></span></div>
+            <div class="axis-track"><div class="axis-track__fill" data-w="57"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Chọn bài test ===== -->
+  <section class="section" id="chon-bai-test">
+    <div class="wrap">
+      <p class="eyebrow">Bắt đầu theo cách của bạn</p>
+      <h2 class="h2" style="margin-block:14px 16px">Hai cách khám phá.<br>Cùng một sự tò mò.</h2>
+      <p class="lead">
+        Chọn cách trả lời khiến bạn thoải mái nhất. Mỗi bài mang đến một góc nhìn
+        để bạn tự đối chiếu với trải nghiệm của mình.
+      </p>
+
+      <div class="choice-grid">
+        <article class="choice">
+          <p class="choice__tag">01 / Thang 7 mức</p>
+          <h3 class="h3">Từng sắc thái của chính bạn</h3>
+          <p class="muted">
+            Không chỉ có “có” hoặc “không”. Chọn mức độ đồng ý gần với bạn nhất
+            qua những tình huống quen thuộc.
+          </p>
+          <a class="btn btn--primary" href="lam-bai.html?bai=7-muc">Làm bài 7 mức →</a>
+          <p class="choice__meta">
+            <span class="pill">32 câu</span>
+            <span class="pill pill--plum">5–7 phút</span>
+          </p>
+        </article>
+
+        <article class="choice">
+          <p class="choice__tag">02 / Lựa chọn A–B</p>
+          <h3 class="h3">Giữa hai lựa chọn, bạn nghiêng về đâu?</h3>
+          <p class="muted">
+            So sánh hai mô tả và chọn điều thường giống bạn hơn.
+            Một cách đơn giản để nhìn lại thói quen mỗi ngày.
+          </p>
+          <a class="btn btn--primary" href="lam-bai.html?bai=ab">Làm bài A/B →</a>
+          <p class="choice__meta">
+            <span class="pill">50 câu</span>
+            <span class="pill pill--plum">8–10 phút</span>
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Vì sao ===== -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <p class="eyebrow">Hiểu mình để đi xa hơn</p>
+      <h2 class="h2" style="margin-block:14px 0">
+        Một kết quả không định nghĩa bạn.<br>Nhưng có thể mở đầu một cuộc trò chuyện.
+      </h2>
+
+      <div class="steps">
+        <div class="step">
+          <h3 class="h3">Nhận ra xu hướng</h3>
+          <p class="muted">Gọi tên những cách suy nghĩ và phản ứng bạn thường sử dụng.</p>
+        </div>
+        <div class="step">
+          <h3 class="h3">Hiểu sự khác biệt</h3>
+          <p class="muted">Nhìn người khác bằng sự tò mò, thay vì chờ họ giống mình.</p>
+        </div>
+        <div class="step">
+          <h3 class="h3">Chọn bước tiếp theo</h3>
+          <p class="muted">Dùng kết quả như gợi ý để thử một cách học, làm việc hoặc kết nối mới.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 16 nhóm ===== -->
+  <section class="section" id="nhom-tinh-cach">
+    <div class="wrap">
+      <p class="eyebrow">Cùng khác biệt, cùng có giá trị</p>
+      <h2 class="h2" style="margin-block:14px 16px">16 nhóm. Vô vàn phiên bản riêng.</h2>
+      <p class="lead">
+        Bốn chữ cái là một bản tóm tắt xu hướng, không phải giới hạn của bạn.
+        Những mô tả dưới đây chỉ có tính khái quát.
+      </p>
+      <div class="group-grid" id="groupGrid"><!-- dựng bằng JS từ types.js --></div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section section--tight" id="cau-hoi">
+    <div class="wrap wrap--narrow">
+      <p class="eyebrow">Trước khi bạn bắt đầu</p>
+      <h2 class="h2" style="margin-block:14px 0">Câu hỏi thường gặp</h2>
+
+      <div class="faq">
+        <details open>
+          <summary>Tôi nên chọn bài nào?</summary>
+          <div>Chọn bài 7 mức nếu bạn muốn thể hiện mức độ đồng ý. Chọn A/B nếu bạn thích
+            so sánh hai mô tả cụ thể. Không bài nào được coi là chính xác hơn chỉ vì dài hơn.</div>
+        </details>
+        <details>
+          <summary>Kết quả có phải chẩn đoán tâm lý không?</summary>
+          <div>Không. Đây là công cụ tự khám phá theo bốn trục tính cách, chưa được kiểm định
+            đo lường. Không dùng để chẩn đoán, tuyển dụng hay kết luận về năng lực.</div>
+        </details>
+        <details>
+          <summary>Tôi có thể thay đổi nhóm tính cách không?</summary>
+          <div>Câu trả lời có thể thay đổi theo hoàn cảnh và trải nghiệm. Hãy nhìn vào các xu hướng
+            và mức độ cân bằng, thay vì xem nhãn bốn chữ là cố định.</div>
+        </details>
+        <details>
+          <summary>Bài này có giống hoàn toàn 16Personalities không?</summary>
+          <div>Không. Baans dùng nội dung và cách tính riêng theo bốn trục. 16Personalities sử dụng
+            mô hình riêng có thêm trục thứ năm; hai hệ thống không tương đương.</div>
+        </details>
+        <details>
+          <summary>Dữ liệu trả lời của tôi được lưu ở đâu?</summary>
+          <div>Toàn bộ câu trả lời chỉ nằm trong trình duyệt của bạn để giữ tiến độ khi lỡ thoát ra.
+            Không có tài khoản, không gửi dữ liệu đi đâu. Xoá lịch sử trình duyệt là mất sạch.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="cta">
+        <h2 class="h2">Bắt đầu từ sự tò mò.<br>Tiếp tục bằng sự thấu hiểu.</h2>
+        <div class="hero__actions" style="justify-content:center">
+          <a class="btn btn--primary" href="lam-bai.html?bai=7-muc">Làm bài 7 mức →</a>
+          <a class="btn btn--ghost" href="lam-bai.html?bai=ab">Làm bài A/B →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__top">
+      <a class="brand" href="index.html">baans<span>✳</span></a>
+      <p class="muted" style="font-size:14.5px">Hiểu mình hơn. Kết nối tốt hơn.</p>
+      <nav class="site-footer__links" aria-label="Liên kết chân trang">
+        <a href="#chon-bai-test">Bài trắc nghiệm</a>
+        <a href="#nhom-tinh-cach">16 nhóm tính cách</a>
+        <a href="#cau-hoi">Câu hỏi thường gặp</a>
+      </nav>
+    </div>
+    <small>
+      Công cụ tự khám phá, không phải chẩn đoán tâm lý hay đánh giá năng lực.
+      Baans không liên kết với 16Personalities hoặc đơn vị sở hữu MBTI®.
+    </small>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/site.js"></script>
+</body>
+</html>

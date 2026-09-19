@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Làm bài — Baans</title>
+<meta name="description" content="Làm bài trắc nghiệm tính cách Baans và nhận kết quả ngay sau câu cuối cùng.">
+<meta name="theme-color" content="#fbfaf6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121a17" media="(prefers-color-scheme: dark)">
+<meta name="robots" content="noindex">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✳</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+
+<script>
+  // Đặt giao diện trước khi vẽ để không bị nháy màu (FOUC)
+  try {
+    var t = localStorage.getItem('baans-theme');
+    if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+</head>
+<body>
+
+<a class="sr-only" href="#main">Bỏ qua điều hướng, tới nội dung chính</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="wrap">
+    <nav class="nav" aria-label="Điều hướng chính">
+      <a class="brand" href="index.html">baans<span>✳</span></a>
+
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+        <span class="nav__bars" aria-hidden="true"></span>
+        <span class="sr-only">Mở menu</span>
+      </button>
+
+      <div class="nav__menu" id="navMenu">
+        <a class="nav__link" href="index.html">Trang chủ</a>
+        <a class="nav__link" href="index.html#chon-bai-test">Bài trắc nghiệm</a>
+        <a class="nav__link" href="index.html#nhom-tinh-cach">16 nhóm tính cách</a>
+      </div>
+
+      <button class="theme-toggle" id="themeToggle" title="Đổi giao diện sáng/tối">
+        <span aria-hidden="true" id="themeIcon">◐</span>
+        <span class="sr-only">Đổi giao diện sáng/tối</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ Màn 1: giới thiệu ============ -->
+  <section class="section" id="introScreen">
+    <div class="wrap wrap--narrow">
+      <p class="eyebrow" id="introEyebrow">Baans</p>
+      <h1 class="h1" style="font-size:clamp(1.9rem,5.4vw,3.4rem);margin-block:14px 18px" id="introTitle">
+        Không ai giống bạn.<br>Kể cả gần giống.
+      </h1>
+      <p class="lead" id="introLead">
+        Chọn mức độ đồng ý đúng với bạn trong phần lớn tình huống.
+        Trả lời như bạn vốn là, không phải như bạn nghĩ mình nên là.
+      </p>
+
+      <p class="hero__note" style="margin-top:22px">
+        <span id="introCount">32 câu</span><span aria-hidden="true">·</span>
+        <span id="introTime">5–7 phút</span><span aria-hidden="true">·</span>
+        <span>Có thể quay lại sửa câu trả lời</span>
+      </p>
+
+      <div class="hero__actions">
+        <button class="btn btn--primary" id="btnStart" type="button">Bắt đầu →</button>
+        <button class="btn btn--ghost" id="btnResume" type="button" hidden>Tiếp tục bài đang dở</button>
+        <a class="btn btn--ghost" id="btnOther" href="lam-bai.html?bai=ab">Đổi sang bài A/B</a>
+      </div>
+
+      <p class="notice" style="margin-top:34px">
+        Bản thử nghiệm Baans theo 4 trục — không phải bài chẩn đoán hay bài kiểm tra năng lực.
+        Câu trả lời chỉ lưu trong trình duyệt của bạn.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Màn 2: làm bài ============ -->
+  <div id="quizScreen" hidden>
+
+    <div class="quiz-progress">
+      <div class="wrap wrap--narrow">
+        <div class="quiz-progress__row">
+          <span>Câu <strong id="pgNow">1</strong> / <span id="pgTotal">32</span></span>
+          <span class="spacer"></span>
+          <span id="pgPercent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-track__fill" id="pgFill"></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="quiz-stage">
+      <div class="wrap wrap--narrow">
+        <div class="qcard" id="qcard" role="group" aria-labelledby="qtext" aria-live="polite">
+          <p class="qcard__index" id="qindex">Câu 1</p>
+          <p class="qcard__stem" id="qstem" hidden></p>
+          <h2 class="qcard__text" id="qtext">—</h2>
+
+          <!-- Thang 7 mức -->
+          <div class="scale" id="scaleBox" hidden>
+            <div class="scale__ends">
+              <span>Không đồng ý</span>
+              <span>Đồng ý</span>
+            </div>
+            <div class="scale__dots" id="scaleDots" role="radiogroup" aria-label="Mức độ đồng ý"></div>
+            <p class="scale__hint" id="scaleHint">Chọn một mức · hoặc bấm phím 1–7</p>
+          </div>
+
+          <!-- Lựa chọn A/B -->
+          <div class="ab" id="abBox" hidden>
+            <button class="ab__opt" type="button" data-pick="a">
+              <span class="ab__key" aria-hidden="true">A</span>
+              <span data-slot="a">—</span>
+            </button>
+            <button class="ab__opt" type="button" data-pick="b">
+              <span class="ab__key" aria-hidden="true">B</span>
+              <span data-slot="b">—</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="quiz-nav">
+      <div class="wrap wrap--narrow">
+        <div class="quiz-nav__row">
+          <button class="btn btn--ghost" id="btnPrev" type="button">← Câu trước</button>
+          <span class="spacer"></span>
+          <button class="btn btn--plain" id="btnQuit" type="button">Thoát</button>
+          <button class="btn btn--primary" id="btnNext" type="button" disabled>Câu sau →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Màn 3: kết quả ============ -->
+  <div id="resultScreen" hidden>
+    <section class="result">
+      <div class="wrap wrap--narrow">
+
+        <div class="result__hero">
+          <p class="eyebrow" id="rsGroup">—</p>
+          <p class="result__code" id="rsCode">—</p>
+          <h1 class="result__name" id="rsName">—</h1>
+          <p class="result__tagline" id="rsTagline">—</p>
+
+          <div class="result__actions">
+            <button class="btn btn--primary" id="btnCopy" type="button">Sao chép link kết quả</button>
+            <button class="btn btn--ghost" id="btnRetry" type="button">Làm lại bài này</button>
+            <a class="btn btn--ghost" id="btnTryOther" href="lam-bai.html?bai=ab">Thử bài còn lại</a>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Bốn trục của bạn</h2>
+          <p class="panel__sub">
+            Phần trăm cho biết bạn nghiêng về bên nào nhiều hơn. Càng gần 50% thì hai bên càng cân bằng.
+          </p>
+          <div id="rsAxes"></div>
+        </div>
+
+        <div class="panel">
+          <h2 id="rsIntroHead">Bạn thường là người thế nào</h2>
+          <p class="panel__sub" id="rsIntro">—</p>
+
+          <div class="facts">
+            <div>
+              <h3>Điểm mạnh thường thấy</h3>
+              <ul id="rsStrengths"></ul>
+            </div>
+            <div>
+              <h3>Điều đáng để ý</h3>
+              <ul class="facts--watch" id="rsWatch"></ul>
+            </div>
+            <div>
+              <h3>Điều có thể thử</h3>
+              <ul class="facts--tips" id="rsTips"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" id="rsReviewPanel">
+          <details>
+            <summary style="cursor:pointer;font-weight:600">Xem lại câu trả lời của bạn</summary>
+            <ul class="review" id="rsReview"></ul>
+          </details>
+        </div>
+
+        <p class="notice">
+          Kết quả này là công cụ tự khám phá, không phải chẩn đoán tâm lý hay đánh giá năng lực.
+          Câu trả lời có thể thay đổi theo hoàn cảnh — hãy nhìn vào xu hướng, đừng xem bốn chữ cái là cố định.
+        </p>
+
+        <div class="hero__actions" style="justify-content:center;margin-top:30px">
+          <a class="btn btn--ghost" href="index.html">← Về trang chủ</a>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__top">
+      <a class="brand" href="index.html">baans<span>✳</span></a>
+      <p class="muted" style="font-size:14.5px">Hiểu mình hơn. Kết nối tốt hơn.</p>
+    </div>
+    <small>
+      Công cụ tự khám phá, không phải chẩn đoán tâm lý hay đánh giá năng lực.
+      Baans không liên kết với 16Personalities hoặc đơn vị sở hữu MBTI®.
+    </small>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/quiz.js"></script>
+</body>
+</html>

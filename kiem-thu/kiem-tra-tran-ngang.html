@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="utf-8"><title>Do tran ngang</title>
+<style>body{font:13px monospace;padding:12px;white-space:pre-wrap}.bad{color:#c00;font-weight:700}.ok{color:#0a7a2f}
+#fr{position:fixed;left:-4000px;top:0;border:0}</style></head>
+<body>
+<div id="log">dang do...</div>
+<iframe id="fr"></iframe>
+<script>
+const out = [];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const fr = document.getElementById('fr');
+const WIDTHS = [320, 360, 390, 414, 768, 1024, 1440];
+
+let nonce = 0;
+// Gán lại src trùng y hệt thì iframe không tải lại -> thêm tham số duy nhất trước dấu #
+function bust(url) {
+  const [path, hash] = url.split('#');
+  const sep = path.includes('?') ? '&' : '?';
+  return path + sep + '_n=' + (++nonce) + (hash ? '#' + hash : '');
+}
+
+function load(url, w) {
+  fr.style.width = w + 'px';
+  fr.style.height = '900px';
+  return new Promise(res => { fr.onload = () => res(fr.contentWindow); fr.src = bust(url); });
+}
+
+// Liệt kê phần tử nào thò ra ngoài chiều rộng khung nhìn
+function offenders(w) {
+  const d = fr.contentDocument;
+  const limit = d.documentElement.clientWidth;
+  const bad = [];
+  d.querySelectorAll('body *').forEach(el => {
+    if (!el.offsetParent && el.tagName !== 'BODY') {
+      const cs = getComputedStyle(el);
+      if (cs.display === 'none' || cs.visibility === 'hidden') return;
+    }
+    const r = el.getBoundingClientRect();
+    if (r.width === 0 && r.height === 0) return;
+    const over = Math.round(r.right - limit);
+    if (over > 1) {
+      const id = el.id ? '#' + el.id : '';
+      const cls = el.className && typeof el.className === 'string'
+        ? '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.') : '';
+      bad.push(`${el.tagName.toLowerCase()}${id}${cls} thò ra ${over}px`);
+    }
+  });
+  return [...new Set(bad)];
+}
+
+async function check(label, url, prep) {
+  for (const w of WIDTHS) {
+    const win = await load(url, w);
+    await sleep(320);
+    if (prep) { try { prep(fr.contentDocument); } catch (e) {} await sleep(250); }
+    const d = fr.contentDocument;
+    const scrollW = d.documentElement.scrollWidth;
+    const clientW = d.documentElement.clientWidth;
+    const bad = offenders(w);
+    const overflow = scrollW - clientW;
+    const ok = overflow <= 1 && bad.length === 0;
+    out.push(`${ok ? '[OK]  ' : '[TRAN]'} ${label} @${w}px  khung=${clientW} noidung=${scrollW}` +
+             (bad.length ? '\n         ' + bad.slice(0, 6).join('\n         ') : ''));
+  }
+}
+
+(async () => {
+  try {
+    await check('trang chu   ', '../index.html');
+    await check('gioi thieu 7', '../lam-bai.html?bai=7-muc');
+    await check('lam bai 7muc', '../lam-bai.html?bai=7-muc', d => d.getElementById('btnStart').click());
+    await check('lam bai A/B ', '../lam-bai.html?bai=ab',   d => d.getElementById('btnStart').click());
+    await check('ket qua     ', '../lam-bai.html?bai=7-muc#kq=7-muc-32-74-39-57');
+  } catch (e) { out.push('[LOI] ' + (e && e.stack || e)); }
+  const bad = out.filter(l => l.startsWith('[TRAN]') || l.startsWith('[LOI]')).length;
+  document.getElementById('log').innerHTML =
+    out.map(l => `<div class="${l.startsWith('[OK]') ? 'ok' : 'bad'}">${l.replace(/</g, '&lt;')}</div>`).join('') +
+    `<hr><b>TONG: ${bad === 0 ? 'KHONG_TRAN' : bad + '_TRUONG_HOP_TRAN'}</b>`;
+})();
+</script>
+</body></html>

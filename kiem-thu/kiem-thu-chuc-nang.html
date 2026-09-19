@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="utf-8"><title>Kiem thu chấm điểm</title>
+<style>body{font:14px monospace;padding:16px;white-space:pre-wrap}.ok{color:#0a7a2f}.bad{color:#c00;font-weight:700}</style>
+</head>
+<body>
+<div id="log">Đang chạy…</div>
+<iframe id="fr" style="width:390px;height:700px;border:1px solid #ccc" src="about:blank"></iframe>
+<script>
+const log = [];
+const say = (ok, msg) => log.push((ok ? '[OK]  ' : '[FAIL] ') + msg);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const fr = document.getElementById('fr');
+
+function load(url) {
+  return new Promise(res => { fr.onload = () => res(fr.contentWindow); fr.src = url; });
+}
+
+// Trả lời cả bài sao cho ra đúng nhóm mục tiêu, rồi đọc mã kết quả
+async function run(bai, target) {
+  const w = await load('../lam-bai.html?bai=' + bai);
+  const d = w.document;
+  await sleep(400);
+
+  d.getElementById('btnStart').click();
+  await sleep(120);
+
+  // Lấy ngân hàng câu hỏi thật từ module để biết trục của từng câu
+  // import() phan giai theo trang goi, nen dung URL tuyet doi lay tu chinh iframe
+  const base = w.location.href.split(/[?#]/)[0].replace(/[^/]*$/, '');
+  const mod = await w.eval(`import(${JSON.stringify(base + 'assets/js/questions.js')})`);
+  const qs = bai === 'ab' ? mod.QUESTIONS_AB : mod.QUESTIONS_7;
+
+  for (let i = 0; i < qs.length; i++) {
+    const q = qs[i];
+    if (bai === 'ab') {
+      // A ứng với cực đầu của trục; chọn A nếu cực đầu nằm trong nhóm mục tiêu
+      const pick = target.includes(q.ax[0]) ? 'a' : 'b';
+      d.querySelector(`.ab__opt[data-pick="${pick}"]`).click();
+    } else {
+      // Rất đồng ý (7) nếu câu nghiêng về cực có trong nhóm mục tiêu, ngược lại Rất không đồng ý (1)
+      const v = target.includes(q.p) ? 7 : 1;
+      d.querySelector(`.dot[data-value="${v}"]`).click();
+    }
+    await sleep(340);   // phải chờ lâu hơn 280ms auto-advance của bài
+  }
+  await sleep(600);
+
+  const code = d.getElementById('rsCode').textContent.trim();
+  const shown = !d.getElementById('resultScreen').hidden;
+  const axes = [...d.querySelectorAll('.abar__top')].map(e => e.textContent.replace(/\s+/g, ' ').trim());
+  say(shown, `${bai}: màn kết quả hiện ra`);
+  say(code === target, `${bai}: mục tiêu ${target} → nhận được ${code}`);
+  say(!!d.getElementById('rsName').textContent.trim() && d.getElementById('rsName').textContent !== '—',
+      `${bai}: có tên nhóm "${d.getElementById('rsName').textContent}"`);
+  say(d.querySelectorAll('.abar').length === 4, `${bai}: vẽ đủ 4 thanh trục`);
+  say(d.querySelectorAll('#rsStrengths li').length > 0, `${bai}: có danh sách điểm mạnh`);
+  say(location.hash !== null && w.location.hash.startsWith('#kq='), `${bai}: hash chia sẻ = ${w.location.hash}`);
+  log.push('        trục: ' + axes.join(' | '));
+  return w.location.hash;
+}
+
+// Mở lại một kết quả đã chia sẻ, không cần làm bài
+async function runShared(hash) {
+  const w = await load('../lam-bai.html?bai=7-muc' + hash);
+  await sleep(500);
+  const d = w.document;
+  say(!d.getElementById('resultScreen').hidden, 'link chia sẻ: vào thẳng màn kết quả');
+  say(d.getElementById('rsCode').textContent.trim().length === 4,
+      'link chia sẻ: mã = ' + d.getElementById('rsCode').textContent.trim());
+  say(d.getElementById('rsReviewPanel').hidden, 'link chia sẻ: ẩn bảng xem lại câu trả lời');
+}
+
+// Bỏ dở giữa chừng rồi quay lại thì còn tiến độ
+async function runResume() {
+  let w = await load('../lam-bai.html?bai=7-muc');
+  await sleep(400);
+  let d = w.document;
+  d.getElementById('btnStart').click();
+  await sleep(100);
+  for (let i = 0; i < 5; i++) { d.querySelector('.dot[data-value="6"]').click(); await sleep(340); }
+  w = await load('../lam-bai.html?bai=7-muc');
+  await sleep(400);
+  d = w.document;
+  const btn = d.getElementById('btnResume');
+  say(!btn.hidden, 'tiếp tục: nút hiện ra sau khi bỏ dở — "' + btn.textContent.trim() + '"');
+  btn.click();
+  await sleep(150);
+  say(d.getElementById('pgNow').textContent === '6', 'tiếp tục: quay lại đúng câu 6, đang ở câu ' + d.getElementById('pgNow').textContent);
+}
+
+(async () => {
+  try {
+    const h = await run('7-muc', 'INFJ');
+    await run('7-muc', 'ESTP');
+    await run('ab', 'INFJ');
+    await run('ab', 'ESTP');
+    await runShared(h);
+    await runResume();
+  } catch (e) {
+    say(false, 'LỖI CHẠY: ' + (e && e.stack || e));
+  }
+  const bad = log.filter(l => l.startsWith('[FAIL]')).length;
+  document.getElementById('log').innerHTML =
+    log.map(l => `<div class="${l.startsWith('[FAIL]') ? 'bad' : 'ok'}">${l.replace(/</g,'&lt;')}</div>`).join('')
+    + `<hr><b>KET_QUA: ${bad === 0 ? 'TAT_CA_DAT' : bad + '_MUC_HONG'}</b>`;
+})();
+</script>
+</body>
+</html>
